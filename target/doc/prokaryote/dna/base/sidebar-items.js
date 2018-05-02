@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["get_rand","获取任意数方法，范围为0到3"]],"struct":[["Base","用于储存碱基的结构体"]]});

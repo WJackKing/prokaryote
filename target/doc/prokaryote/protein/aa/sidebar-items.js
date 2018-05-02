@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["get_rand",""]],"struct":[["Aa","储存氨基酸的结构体，具体方法参照Base结构体"]]});
