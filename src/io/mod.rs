@@ -1,4 +1,5 @@
 use dna::base::Base;
+use dna::codon::Codon;
 use dna::Dna;
 use protein::aa::Aa;
 use protein::Protein;
@@ -29,11 +30,20 @@ pub fn print_base(base: &Base) {
     print!("{}", BASE[base.get_num()]);
 }
 
+///输出密码子
+pub fn print_codon(codon: &Codon) {
+    print!(
+        "{}{}{}",
+        BASE[codon.get_h()],
+        BASE[codon.get_m()],
+        BASE[codon.get_l()]
+    );
+}
+
 ///输出氨基酸
 pub fn print_aa(aa: &Aa) {
     print!("{}", AA[aa.get_num()]);
 }
-
 
 ///输出dna
 pub fn print_dna(dna: &Dna) {

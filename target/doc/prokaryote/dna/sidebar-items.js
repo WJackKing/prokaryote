@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["base",""]],"struct":[["Dna","储存base序列的结构体"]]});
+initSidebarItems({"mod":[["base",""],["codon",""]],"struct":[["Dna","储存base序列的结构体"]]});

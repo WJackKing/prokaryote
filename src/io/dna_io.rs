@@ -40,11 +40,11 @@ impl DnaIo {
         self.info.clone()
     }
 
-    pub fn get_index(&self) -> usize{
+    pub fn get_index(&self) -> usize {
         self.index
     }
 
-    pub fn get_line_num(&self) -> (usize, usize){
+    pub fn get_line_num(&self) -> (usize, usize) {
         self.line_num
     }
 }

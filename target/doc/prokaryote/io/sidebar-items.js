@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["dna_to_protein","dna序列转换为蛋白质序列"],["print_aa","输出氨基酸"],["print_base","输出碱基"],["print_dna","输出dna"],["print_protein","以单字符输出蛋白质序列"],["print_protein_triple","以三字符输出蛋白质序列"]],"mod":[["dna_io",""],["protein_io",""]]});
+initSidebarItems({"fn":[["dna_to_protein","dna序列转换为蛋白质序列"],["print_aa","输出氨基酸"],["print_base","输出碱基"],["print_codon","输出密码子"],["print_dna","输出dna"],["print_protein","以单字符输出蛋白质序列"],["print_protein_triple","以三字符输出蛋白质序列"]],"mod":[["dna_io",""],["protein_io",""]]});

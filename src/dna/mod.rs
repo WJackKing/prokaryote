@@ -1,7 +1,9 @@
 pub mod base;
+pub mod codon;
 
 use self::base::Base;
 use self::base::get_rand;
+use self::codon::GetCodon;
 
 ///储存base序列的结构体
 pub struct Dna {
@@ -39,6 +41,15 @@ impl Dna {
             }
         }
         dna
+    }
+
+    ///生成密码子
+    pub fn codon(&self, offset: usize) -> Option<GetCodon> {
+        if offset + 2 > self.len() {
+            None
+        } else {
+            Some(GetCodon::from_dna(self, offset))
+        }
     }
 }
 
