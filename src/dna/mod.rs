@@ -4,6 +4,7 @@ pub mod codon;
 use self::base::Base;
 use self::base::get_rand;
 use self::codon::GetCodon;
+use self::codon::Codon;
 
 ///储存base序列的结构体
 pub struct Dna {
@@ -94,6 +95,95 @@ impl Dna {
     ///获取dna链长度
     pub fn len(&self) -> usize {
         self.genes.len()
+    }
+}
+
+impl Dna {
+    ///查找一个碱基
+    pub fn find_base(&self, base: &Base, offset: usize) -> Option<usize> {
+        for i in offset..self.len() {
+            if self.genes[i].get_num() == base.get_num() {
+                return Some(i);
+            }
+        }
+        return None;
+    }
+
+    ///查找所有碱基
+    pub fn find_base_all(&self, base: &Base, offset: usize) -> Option<Vec<usize>> {
+        let mut v = vec![0usize; 0];
+        for i in offset..self.len() {
+            if self.genes[i].get_num() == base.get_num() {
+                v.push(i);
+            }
+        }
+        if v.len() != 0 {
+            Some(v)
+        } else {
+            None
+        }
+    }
+
+    pub fn find_codon(&self, codon: &Codon, offset: usize) -> Option<usize> {
+        for i in offset..self.len() - 2 {
+            if self.genes[i].get_num() == codon.get_h()
+                && self.genes[i + 1].get_num() == codon.get_m()
+                && self.genes[i + 2].get_num() == codon.get_l()
+            {
+                return Some(i);
+            }
+        }
+        return None;
+    }
+
+    pub fn find_codon_all(&self, codon: &Codon, offset: usize) -> Option<Vec<usize>> {
+        let mut v = vec![0usize; 0];
+        for i in offset..self.len() - 2 {
+            if self.genes[i].get_num() == codon.get_h()
+                && self.genes[i + 1].get_num() == codon.get_m()
+                && self.genes[i + 2].get_num() == codon.get_l()
+            {
+                v.push(i);
+            }
+        }
+        if v.len() != 0 {
+            Some(v)
+        } else {
+            None
+        }
+    }
+
+    pub fn find_codon_triple(&self, codon: &Codon, offset: usize) -> Option<usize>{
+        for i in offset..self.len() - 4 {
+            if (i - offset) % 3 == 0{
+                if self.genes[i].get_num() == codon.get_h()
+                    && self.genes[i + 1].get_num() == codon.get_m()
+                    && self.genes[i + 2].get_num() == codon.get_l()
+                {
+                    return Some(i);
+                }
+            }
+        }
+        return None;
+    }
+
+    pub fn find_codon_all_triple(&self, codon: &Codon, offset: usize) -> Option<Vec<usize>>{
+        let v = vec![0usize; 0];
+        for i in offset..self.len() - 4{
+            if (i - offset) % 3 == 0{
+                if self.genes[i].get_num() == codon.get_h()
+                    && self.genes[i + 1].get_num() == codon.get_m()
+                    && self.genes[i + 2].get_num() == codon.get_l()
+                {
+                    v.push(i);
+                }
+            }
+        }
+        if v.len() != 0{
+            Some(v)
+        }else{
+            None
+        }
     }
 }
 

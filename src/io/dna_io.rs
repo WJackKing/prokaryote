@@ -36,6 +36,10 @@ impl DnaIo {
 }
 
 impl DnaIo {
+    pub fn line_num(&self) -> usize{
+        self.len()
+    }
+
     pub fn get_info(&self) -> String {
         self.info.clone()
     }
