@@ -103,7 +103,7 @@ pub struct LineBuf{
 }
 
 impl LineBuf{
-    pub fn new(mut file: &File) -> LineBuf{
+    pub fn new(file: &mut File) -> LineBuf{
         let mut index = 0;
         let mut lines = vec![0usize; 0];
         let mut records = vec![0usize; 0];
@@ -164,7 +164,7 @@ pub struct Dnaio{
 impl Dnaio{
     pub fn open(file: &str) -> Dnaio{
         let mut f = File::open(file).unwrap();
-        let line_buf = LineBuf::new(&f);
+        let line_buf = LineBuf::new(&mut f);
         Dnaio{
             buf: ReadBuf::new(f),
             line_buf,
