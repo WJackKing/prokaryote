@@ -7,15 +7,15 @@ pub struct Orf{
 }
 
 impl Orf{
-    pub fn new(dna_io: DnaIo) -> Orf{
-        let dna_1: Dna;
-        let dna_2: Dna;
-        for i in 0..dna_io.line_num(){
-            if i % 2 == 0{
-                dna_2 = dna_io.read_line(1);
-            }else{
-                dna_1 = dna_io.read_line(1);
-            }
-        }
-    }
+//    pub fn new(dna_io: DnaIo) -> Orf{
+//        let dna_1: Dna;
+//        let dna_2: Dna;
+//        for i in 0..dna_io.line_num(){
+//            if i % 2 == 0{
+//                dna_2 = dna_io.read_line(1);
+//            }else{
+//                dna_1 = dna_io.read_line(1);
+//            }
+//        }
+//    }
 }

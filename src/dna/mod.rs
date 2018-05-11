@@ -168,7 +168,7 @@ impl Dna {
     }
 
     pub fn find_codon_all_triple(&self, codon: &Codon, offset: usize) -> Option<Vec<usize>>{
-        let v = vec![0usize; 0];
+        let mut v = vec![0usize; 0];
         for i in offset..self.len() - 4{
             if (i - offset) % 3 == 0{
                 if self.genes[i].get_num() == codon.get_h()
