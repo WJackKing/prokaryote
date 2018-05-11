@@ -64,7 +64,7 @@ impl Dna {
     }
 
     ///追加一个dna序列
-    pub fn append(&mut self, other: Dna) {
+    pub fn append(&mut self, other: &Dna) {
         for i in 0..other.len() {
             self.push_num(other.index_num(i)).unwrap();
         }
@@ -153,9 +153,9 @@ impl Dna {
         }
     }
 
-    pub fn find_codon_triple(&self, codon: &Codon, offset: usize) -> Option<usize>{
+    pub fn find_codon_triple(&self, codon: &Codon, offset: usize) -> Option<usize> {
         for i in offset..self.len() - 4 {
-            if (i - offset) % 3 == 0{
+            if (i - offset) % 3 == 0 {
                 if self.genes[i].get_num() == codon.get_h()
                     && self.genes[i + 1].get_num() == codon.get_m()
                     && self.genes[i + 2].get_num() == codon.get_l()
@@ -167,10 +167,10 @@ impl Dna {
         return None;
     }
 
-    pub fn find_codon_all_triple(&self, codon: &Codon, offset: usize) -> Option<Vec<usize>>{
+    pub fn find_codon_all_triple(&self, codon: &Codon, offset: usize) -> Option<Vec<usize>> {
         let mut v = vec![0usize; 0];
-        for i in offset..self.len() - 4{
-            if (i - offset) % 3 == 0{
+        for i in offset..self.len() - 4 {
+            if (i - offset) % 3 == 0 {
                 if self.genes[i].get_num() == codon.get_h()
                     && self.genes[i + 1].get_num() == codon.get_m()
                     && self.genes[i + 2].get_num() == codon.get_l()
@@ -179,9 +179,9 @@ impl Dna {
                 }
             }
         }
-        if v.len() != 0{
+        if v.len() != 0 {
             Some(v)
-        }else{
+        } else {
             None
         }
     }

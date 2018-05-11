@@ -8,45 +8,29 @@ pub struct Codon {
     l: usize,
 }
 
-impl Codon{
-    pub fn from_num<'a>(h: usize, m: usize, l: usize) -> Result<Codon, &'a str>{
-        if h <=3 && m <=3 && l <=3{
-            Ok(Codon{h, m, l})
-        }else{
+impl Codon {
+    pub fn from_num<'a>(h: usize, m: usize, l: usize) -> Result<Codon, &'a str> {
+        if h <= 3 && m <= 3 && l <= 3 {
+            Ok(Codon { h, m, l })
+        } else {
             Err("num err")
         }
     }
 
-    pub fn new_atg() -> Codon{
-        Codon{
-            h: 0,
-            m: 3,
-            l: 2,
-        }
+    pub fn new_atg() -> Codon {
+        Codon { h: 0, m: 3, l: 2 }
     }
 
-    pub fn new_taa() -> Codon{
-        Codon{
-            h: 3,
-            m: 0,
-            l: 0,
-        }
+    pub fn new_taa() -> Codon {
+        Codon { h: 3, m: 0, l: 0 }
     }
 
-    pub fn new_tag() -> Codon{
-        Codon{
-            h: 3,
-            m: 0,
-            l: 2,
-        }
+    pub fn new_tag() -> Codon {
+        Codon { h: 3, m: 0, l: 2 }
     }
 
-    pub fn new_tga() -> Codon{
-        Codon{
-            h: 3,
-            m: 2,
-            l: 0,
-        }
+    pub fn new_tga() -> Codon {
+        Codon { h: 3, m: 2, l: 0 }
     }
 }
 
