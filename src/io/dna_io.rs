@@ -1,83 +1,70 @@
 use std::fs::File;
-use std::io::Error;
 use std::io::prelude::*;
-use std::io::BufReader;
-use std::io::Lines;
+use std::io::SeekFrom;
 use dna::Dna;
 
-///从文件读入一段dna序列
-pub struct DnaIo {
-    lines: Lines<BufReader<File>>,
-    info: String,
-    dna: Dna,
-    index: usize,
-    line_num: (usize, usize),
+pub struct Dnaio {
+    file: File,
+    lines: Vec<usize>,
+    records: Vec<usize>,
 }
 
-impl DnaIo {
-    ///打开一个fasta文件，并初始话数据
-    pub fn open(path: &str) -> Result<DnaIo, Error> {
-        match File::open(path) {
-            Ok(file) => {
-                let mut dna_io = DnaIo {
-                    lines: BufReader::new(file).lines(),
-                    info: String::new(),
-                    dna: Dna::new(0usize),
-                    index: 0usize,
-                    line_num: (1, 1),
-                };
-                dna_io.info = dna_io.lines.next().unwrap().unwrap();
-                dna_io.index = 1;
-                Ok(dna_io)
+impl Dnaio {
+    pub fn new(mut file: File) -> Dnaio {
+        let mut index = 0;
+        let mut lines = vec![0usize; 1];
+        let mut records = vec![0usize; 0];
+        let mut buf = vec![0u8; 200];
+        file.seek(SeekFrom::Start(0)).unwrap();
+        loop {
+            match file.read(&mut buf) {
+                Ok(a) => {
+                    if a == 0 {
+                        break;
+                    } else {
+                        //判断行尾和注释符
+                        for i in 0..buf.len() {
+                            if buf[i].eq(&"\n".as_bytes()[0]) {
+                                lines.push(index + i + 1);
+                            }
+                            if buf[i].eq(&">".as_bytes()[0]) {
+                                records.push(lines.len() - 1);
+                            }
+                        }
+                        index = index + a;
+                    }
+                }
+                Err(err) => panic!("{}", err),
             }
-            Err(err) => Err(err),
         }
-    }
-
-    // pub fn to_read_buf(self) -> ReadBuf{
-    //     ReadBuf::new(self)
-    // }
-}
-
-impl DnaIo {
-    pub fn get_info(&self) -> String {
-        self.info.clone()
-    }
-
-    pub fn get_index(&self) -> usize {
-        self.index
-    }
-
-    pub fn get_line_num(&self) -> (usize, usize) {
-        self.line_num
+        Dnaio { file, lines, records }
     }
 }
 
-impl DnaIo {
-    pub fn read_line(&mut self, line_num: usize) -> Dna {
-        let mut string;
-        let mut len = 0;
-        self.dna.clean();
-        for _i in 0..line_num {
-            string = self.lines.next().unwrap().unwrap();
-            len = len + string.len();
-            self.dna.append(&read_to_dna(string.clone().into_bytes()));
-            string.clear();
-        }
-        self.index = self.index + len;
-        self.line_num = (self.line_num.1, self.line_num.1 + line_num);
-        self.dna.clone()
+impl Dnaio{
+    pub fn lines(&self) -> usize{
+        self.lines.len()
+    }
+
+    pub fn records(&self) -> usize{
+        self.records.len()
+    }
+
+    pub fn get_info(&mut self, record_index: usize) -> Vec<u8>{
+        self.read_line(record_index, record_index + 1)
     }
 }
 
-impl Iterator for DnaIo {
-    type Item = Dna;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        match self.lines.next() {
-            Some(read) => Some(read_to_dna(read.unwrap().into_bytes())),
-            None => None,
-        }
+impl Dnaio {
+    pub fn read_line(&mut self, start_line_num: usize, end_line_num: usize) -> Vec<u8> {
+        let start_line_index = self.lines[start_line_num];
+        let end_line_index = self.lines[end_line_num];
+        let mut buf = vec![0u8; end_line_index - start_line_index];
+        self.file
+            .seek(SeekFrom::Start(start_line_index as u64))
+            .unwrap();
+        self.file.read(&mut buf).unwrap();
+        buf
     }
 }
 
@@ -93,91 +80,4 @@ pub fn read_to_dna(read: Vec<u8>) -> Dna {
         }
     }
     Dna::from_array(array)
-}
-
-//------------------------------------------------------------
-
-pub struct LineBuf{
-    lines: Vec<usize>,
-    records: Vec<usize>,
-}
-
-impl LineBuf{
-    pub fn new(file: &mut File) -> LineBuf{
-        let mut index = 0;
-        let mut lines = vec![0usize; 0];
-        let mut records = vec![0usize; 0];
-        let mut buf = vec![0u8; 200];
-        loop{
-            match file.read(&mut buf){
-                Ok(a) => {
-                    if a == 0{
-                        break;
-                    }else{
-                        //判断行尾
-                        for i in 0..buf.len(){
-                            if buf[i].eq(&"\n".as_bytes()[0]){
-                                lines.push(i + 1);
-                            }
-                            if buf[i].eq(&">".as_bytes()[0]){
-                                records.push(i);
-                            }
-                        }
-                        index = index + a;
-                    }
-                }
-                Err(err) => panic!("{}", err),
-            }
-        }
-        LineBuf{
-            lines,
-            records,
-        }
-    }
-}
-
-pub struct ReadBuf{
-    file: File,
-    buf: [u8; 1024],
-    start: usize,
-    end: usize,
-    index: usize,
-}
-
-impl ReadBuf{
-    pub fn new(file: File) -> ReadBuf{
-        ReadBuf{
-            file,
-            buf: [0u8; 1024],
-            start: 0usize,
-            end: 0usize,
-            index: 0usize,
-        }
-    }
-}
-
-pub struct Dnaio{
-    buf: ReadBuf,
-    line_buf: LineBuf,
-}
-
-impl Dnaio{
-    pub fn open(file: &str) -> Dnaio{
-        let mut f = File::open(file).unwrap();
-        let line_buf = LineBuf::new(&mut f);
-        Dnaio{
-            buf: ReadBuf::new(f),
-            line_buf,
-        }
-    }
-}
-
-impl Dnaio{
-    // pub fn get_info(&self) -> Vec<String>{
-    //     let mut v = vec![String::new(); 0];
-    //     for i in self.mesgv{
-    //         v.push(i.get_string());
-    //     }
-    //     v
-    // }
 }

@@ -13,9 +13,11 @@ pub use dna::codon::Codon;
 pub use dna::codon::GetCodon;
 pub use protein::Protein;
 pub use protein::aa::Aa;
-pub use io::dna_io::DnaIo;
+pub use io::dna_io::Dnaio;
 pub use io::protein_io;
-pub use orf::Orf;
+// pub use orf::Orf;
+
+use std::fs::File;
 
 ///功能测试函数
 pub fn run() {
@@ -64,16 +66,26 @@ pub fn run() {
     // println!("{}", dna.find_codon(&c, 1).unwrap());
     // println!("{}", dna.find_codon_triple(&c, 1).unwrap());
 
-    let di = DnaIo::open("GCF_000005845.2_ASM584v2_genomic.fna").unwrap();
-    println!("{}", di.get_info());
+    // let di = DnaIo::open("GCF_000005845.2_ASM584v2_genomic.fna").unwrap();
+    // println!("{}", di.get_info());
 
-    let orf = Orf::new(di);
-    match orf.get_orf(){
-        Some(v) => {
-            for i in v{
-                println!("{}:{}", i[0], i[1]);
-            }
-        }
-        None => println!("none"),
-    }
+    // let orf = Orf::new(di);
+    // match orf.get_orf(){
+    //     Some(v) => {
+    //         for i in v{
+    //             println!("{}:{}", i[0], i[1]);
+    //         }
+    //     }
+    //     None => println!("none"),
+    // }
+
+    let mut file = File::open("GCF_000005845.2_ASM584v2_genomic.fna").unwrap();
+    let mut dna_io = Dnaio::new(file);
+    println!("{}", dna_io.lines());
+    println!("{}", dna_io.records());
+
+    let v = dna_io.read_line(0, 2);
+    println!("{}", String::from_utf8_lossy(&v));
+
+    println!("{}", String::from_utf8_lossy(&dna_io.get_info(0)));
 }
