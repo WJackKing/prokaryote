@@ -37,25 +37,35 @@ impl Dnaio {
                 Err(err) => panic!("{}", err),
             }
         }
-        Dnaio { file, lines, records }
+        Dnaio {
+            file,
+            lines,
+            records,
+        }
     }
 }
 
-impl Dnaio{
-    pub fn lines(&self) -> usize{
+impl Dnaio {
+    pub fn lines(&self) -> usize {
         self.lines.len()
     }
 
-    pub fn records(&self) -> usize{
+    pub fn records(&self) -> usize {
         self.records.len()
     }
 
-    pub fn get_info(&mut self, record_index: usize) -> Vec<u8>{
+    pub fn get_info(&mut self, record_index: usize) -> Vec<u8> {
         self.read_line(record_index, record_index + 1)
     }
 }
 
 impl Dnaio {
+    pub fn read_record(&mut self, record_index: usize, buf: &mut [u8]) -> usize {
+        let line_index = self.lines[record_index + 1];
+        self.file.seek(SeekFrom::Start(line_index as u64)).unwrap();
+        self.file.read(buf).unwrap()
+    }
+
     pub fn read_line(&mut self, start_line_num: usize, end_line_num: usize) -> Vec<u8> {
         let start_line_index = self.lines[start_line_num];
         let end_line_index = self.lines[end_line_num];
@@ -65,6 +75,10 @@ impl Dnaio {
             .unwrap();
         self.file.read(&mut buf).unwrap();
         buf
+    }
+
+    pub fn read_line_dna(&mut self, start_line_num: usize, end_line_num: usize) -> Dna {
+        read_to_dna(self.read_line(start_line_num, end_line_num))
     }
 }
 

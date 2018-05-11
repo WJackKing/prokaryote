@@ -79,7 +79,7 @@ pub fn run() {
     //     None => println!("none"),
     // }
 
-    let mut file = File::open("GCF_000005845.2_ASM584v2_genomic.fna").unwrap();
+    let file = File::open("GCF_000005845.2_ASM584v2_genomic.fna").unwrap();
     let mut dna_io = Dnaio::new(file);
     println!("{}", dna_io.lines());
     println!("{}", dna_io.records());
