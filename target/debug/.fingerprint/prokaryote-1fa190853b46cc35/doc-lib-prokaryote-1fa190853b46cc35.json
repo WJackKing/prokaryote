@@ -1,1 +1,0 @@
-{"rustc":13779060434678709767,"features":"[]","target":16082524068212498340,"profile":3778503082663913881,"path":10872709659218687626,"deps":[["rand v0.4.2",15624745464013204486],["rand v0.4.2",16753116702160121652]],"local":[{"Precalculated":"13169899723.112187900s (F:/workspace/rust/prokaryote/src/dna/codon.rs)"}],"rustflags":[],"epoch":"Epoch2015"}

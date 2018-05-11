@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["aa",""]],"struct":[["Protein","储存蛋白质的结构体，具体方法参照Dna结构体"]]});

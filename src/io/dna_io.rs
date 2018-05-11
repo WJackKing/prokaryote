@@ -97,6 +97,45 @@ pub fn read_to_dna(read: Vec<u8>) -> Dna {
 
 //------------------------------------------------------------
 
+pub struct LineBuf{
+    lines: Vec<usize>,
+    records: Vec<usize>,
+}
+
+impl LineBuf{
+    pub fn new(mut file: &File) -> LineBuf{
+        let mut index = 0;
+        let mut lines = vec![0usize; 0];
+        let mut records = vec![0usize; 0];
+        let mut buf = vec![0u8; 200];
+        loop{
+            match file.read(&mut buf){
+                Ok(a) => {
+                    if a == 0{
+                        break;
+                    }else{
+                        //判断行尾
+                        for i in 0..buf.len(){
+                            if buf[i].eq(&"\n".as_bytes()[0]){
+                                lines.push(i + 1);
+                            }
+                            if buf[i].eq(&">".as_bytes()[0]){
+                                records.push(i);
+                            }
+                        }
+                        index = index + a;
+                    }
+                }
+                Err(err) => panic!("{}", err),
+            }
+        }
+        LineBuf{
+            lines,
+            records,
+        }
+    }
+}
+
 pub struct ReadBuf{
     file: File,
     buf: [u8; 1024],
@@ -117,73 +156,28 @@ impl ReadBuf{
     }
 }
 
-pub struct Mesg{
-    mesg: String,
-    start: usize,
-    end: usize,
-}
-
-impl Mesg{
-    pub fn new(s: String, start: usize, end: usize) -> Mesg{
-        Mesg{
-            mesg: s,
-            start,
-            end,
-        }
-    }
-}
-
-impl Mesg{
-    pub fn get_mesg(file: &File) -> Mesg{
-        let mut buf = [0u8; 1024];
-        let mut mesg = Mesg::new(String::new(), 0, 0);
-        for i in 0..buf.len(){
-
-        }
-        if mesg.end != 0{
-            mesg
-        }else{
-            mesg
-        }
-    }
-
-    pub fn get_string(&self) -> String{
-        self.mesg
-    }
-}
-
-impl Clone for Mesg{
-    fn clone(&self) -> Self{
-        Mesg{
-            mesg: self.mesg,
-            start: self.start,
-            end: self.end,
-        }
-    }
-}
-
 pub struct Dnaio{
     buf: ReadBuf,
-    mesgv: Vec<Mesg>,
+    line_buf: LineBuf,
 }
 
 impl Dnaio{
     pub fn open(file: &str) -> Dnaio{
         let mut f = File::open(file).unwrap();
-        let mesgv: Vec<Mesg>;
+        let line_buf = LineBuf::new(&f);
         Dnaio{
             buf: ReadBuf::new(f),
-            mesgv,
+            line_buf,
         }
     }
 }
 
 impl Dnaio{
-    pub fn get_info(&self) -> Vec<String>{
-        let mut v = vec![String::new(); 0];
-        for i in self.mesgv{
-            v.push(i.get_string());
-        }
-        v
-    }
+    // pub fn get_info(&self) -> Vec<String>{
+    //     let mut v = vec![String::new(); 0];
+    //     for i in self.mesgv{
+    //         v.push(i.get_string());
+    //     }
+    //     v
+    // }
 }
